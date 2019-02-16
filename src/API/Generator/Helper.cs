@@ -341,7 +341,7 @@ namespace ErikEJ.SqlCeScripting
         }
 
 
-        public static IRepository CreateRepository(string connectionString)
+        public static IRepository CreateRepository(string connectionString, int commandTimeOut)
         {
             //if your Data source connection string argument does not specify the User Id, Initial catalog, Integrated security, 
             //or Trusted Connection arguments, and instead specifies a file path, 
@@ -362,21 +362,21 @@ namespace ErikEJ.SqlCeScripting
             if (isServer)
             {
 #if V40
-                return new ServerDBRepository4(connectionString);
+                return new ServerDBRepository4(connectionString, false, commandTimeOut);
 #else
-                return new ServerDBRepository(connectionString);
+                return new ServerDBRepository(connectionString, false, commandTimeOut);
 #endif
 
             }
             else
             {
 #if V40
-                return new DB4Repository(connectionString);
+                return new DB4Repository(connectionString, commandTimeOut);
 #else
 #if SERVER
-                return new ServerDBRepository(connectionString);
+                return new ServerDBRepository(connectionString, false, commandTimeOut);
 #else
-                return new DBRepository(connectionString);
+                return new DBRepository(connectionString, commandTimeOut);
 #endif
 #endif
             }

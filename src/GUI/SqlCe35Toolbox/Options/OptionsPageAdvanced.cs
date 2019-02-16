@@ -21,6 +21,7 @@ namespace ErikEJ.SqlCeToolbox
             TruncateSQLiteStrings = Properties.Settings.Default.TruncateSQLiteStrings;
             ParticipateInTelemetry = Properties.Settings.Default.ParticipateInTelemetry;
             MakeSQLiteDatetimeReadOnly = Properties.Settings.Default.MakeSQLiteDatetimeReadOnly;
+            CommandTimeOut = Properties.Settings.Default.CommandTimeOut;
             base.OnActivate(e);
         }
 
@@ -85,12 +86,21 @@ namespace ErikEJ.SqlCeToolbox
         DefaultValue(false)]
         public bool PreserveSqlDates { get; set; }
 
+
         [Category("Scripting"),
         DisplayName(@"Truncate SQLite string values"),
         Description("Enabling this option will truncate SQLite strings, that are longer than the defined size, when exporting to SQL Server. Truncations will be logged to: %temp%\\SQLiteTruncates.log"),
         DefaultValue(false)]
         // ReSharper disable once InconsistentNaming
         public bool TruncateSQLiteStrings { get; set; }
+
+        [Category("Scripting"),
+        DisplayName(@"Command Timeout"),
+        Description("The command timeout in seconds. Default value is 30"),
+        DefaultValue(30)]
+        public int CommandTimeOut { get; set; }
+
+
 
         protected override void OnApply(PageApplyEventArgs e)
         {
@@ -105,6 +115,7 @@ namespace ErikEJ.SqlCeToolbox
             Properties.Settings.Default.TruncateSQLiteStrings = TruncateSQLiteStrings;
             Properties.Settings.Default.ParticipateInTelemetry = ParticipateInTelemetry;
             Properties.Settings.Default.MakeSQLiteDatetimeReadOnly = MakeSQLiteDatetimeReadOnly;
+            Properties.Settings.Default.CommandTimeOut = CommandTimeOut;
             Properties.Settings.Default.Save();
             base.OnApply(e);
         }

@@ -40,7 +40,7 @@ namespace ErikEJ.SqlCeScripting
             }
         }
 
-        public void ShrinkDatabase(string connectionString)
+        public void ShrinkDatabase(string connectionString, int commandTimeout = 30)
         {
             using (SqlCeEngine engine = new SqlCeEngine(connectionString))
             {
@@ -48,7 +48,7 @@ namespace ErikEJ.SqlCeScripting
             }
         }
 
-        public void CompactDatabase(string connectionString)
+        public void CompactDatabase(string connectionString, int commandTimeout=30)
         {
             using (SqlCeEngine engine = new SqlCeEngine(connectionString))
             {
@@ -68,7 +68,7 @@ namespace ErikEJ.SqlCeScripting
         {
             using (SqlCeEngine engine = new SqlCeEngine(connectionString))
             {
-                engine.Repair(connectionString, RepairOption.RecoverAllOrFail);
+               // engine.Repair(connectionString, RepairOption.RecoverAllOrFail);
             }
         }
 
@@ -76,7 +76,7 @@ namespace ErikEJ.SqlCeScripting
         {
             using (SqlCeEngine engine = new SqlCeEngine(connectionString))
             {
-                engine.Repair(connectionString, RepairOption.RecoverAllPossibleRows);
+               // engine.Repair(connectionString, RepairOption.RecoverAllPossibleRows);
             }
         }
 
@@ -107,10 +107,12 @@ namespace ErikEJ.SqlCeScripting
 #endif
         }
 
-        public void SaveDataConnection(string repositoryConnectionString, string connectionString, string filePath, int dbType)
+        public void SaveDataConnection(string repositoryConnectionString, string connectionString, string filePath, int dbType, int commandTimeout = 30)
         {
             using (var cmd = new SqlCeCommand(repositoryConnectionString))
             {
+                //SQL CE command time out can't be non-zero... Who knew?
+                //cmd.CommandTimeout = commandTimeout;
                 var conn = new SqlCeConnection(repositoryConnectionString);
                 cmd.Connection = conn; 
                 cmd.CommandText = "INSERT INTO Databases (Source, FileName, CeVersion) VALUES (@Source, @FileName, @CeVersion)";
@@ -126,10 +128,12 @@ namespace ErikEJ.SqlCeScripting
             }
         }
 
-        public void UpdateDataConnection(string repositoryConnectionString, string connectionString, string description)
+        public void UpdateDataConnection(string repositoryConnectionString, string connectionString, string description, int commandTimeout = 30)
         {
             using (var cmd = new SqlCeCommand(repositoryConnectionString))
             {
+                //SQL CE command time out can't be non-zero... Who knew?
+                //cmd.CommandTimeout = commandTimeout;
                 var conn = new SqlCeConnection(repositoryConnectionString);
                 cmd.Connection = conn;
                 cmd.CommandText = "UPDATE Databases SET FileName = @FileName WHERE Source = @Source";
@@ -143,10 +147,13 @@ namespace ErikEJ.SqlCeScripting
             }
         }
 
-        public void DeleteDataConnnection(string repositoryConnectionString, string connectionString)
+        public void DeleteDataConnnection(string repositoryConnectionString, string connectionString, int commandTimeout = 30)
         {
             using (var cmd = new SqlCeCommand())
             {
+
+                //SQL CE command time out can't be non-zero... Who knew?
+                //cmd.CommandTimeout = commandTimeout;
                 var conn = new SqlCeConnection(repositoryConnectionString);
                 cmd.Connection = conn; 
                 cmd.CommandText = "DELETE FROM Databases WHERE Source = @Source;";

@@ -21,7 +21,7 @@ namespace ErikEJ.SqlCeScripting
             throw new NotImplementedException();
         }
 
-        public void CompactDatabase(string connectionString)
+        public void CompactDatabase(string connectionString, int commandTimeOut)
         {
             throw new NotImplementedException();
         }
@@ -56,7 +56,7 @@ namespace ErikEJ.SqlCeScripting
             throw new NotImplementedException();
         }
 
-        public void ShrinkDatabase(string connectionString)
+        public void ShrinkDatabase(string connectionString, int commandTimeOut)
         {
             throw new NotImplementedException();
         }
@@ -123,17 +123,17 @@ namespace ErikEJ.SqlCeScripting
             throw new NotImplementedException();
         }
 
-        public void SaveDataConnection(string repositoryConnectionString, string connectionString, string filePath, int dbType)
+        public void SaveDataConnection(string repositoryConnectionString, string connectionString, string filePath, int dbType, int commandTimeOut)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteDataConnnection(string repositoryConnectionString, string connectionString)
+        public void DeleteDataConnnection(string repositoryConnectionString, string connectionString, int commandTimeOut)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateDataConnection(string repositoryConnectionString, string connectionString, string description)
+        public void UpdateDataConnection(string repositoryConnectionString, string connectionString, string description, int commandTimeOut)
         {
             throw new NotImplementedException();
         }

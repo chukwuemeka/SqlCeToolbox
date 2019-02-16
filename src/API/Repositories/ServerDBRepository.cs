@@ -17,6 +17,7 @@ namespace ErikEJ.SqlCeScripting
     {
         private SqlConnection _cn;
         private readonly bool _keepSchemaName;
+        private int _commandTimeOut;
 
         private readonly List<string> _sqlCeFunctions = new List<string>()
         {
@@ -69,14 +70,15 @@ namespace ErikEJ.SqlCeScripting
 
         private delegate void AddToListDelegate<T>(ref List<T> list, SqlDataReader dr);
 #if V40
-        public ServerDBRepository4(string connectionString, bool keepSchemaName = false)
+        public ServerDBRepository4(string connectionString, bool keepSchemaName = false, int commandTimeOut = 30)
 #else
-        public ServerDBRepository(string connectionString, bool keepSchemaName = false)
+        public ServerDBRepository(string connectionString, bool keepSchemaName = false, int commandTimeOut = 30)
 #endif
         {
             _keepSchemaName = keepSchemaName;
             _cn = new SqlConnection(connectionString);
             _cn.Open();
+            _commandTimeOut = commandTimeOut;
         }
 
         public void Dispose()
@@ -243,6 +245,8 @@ namespace ErikEJ.SqlCeScripting
             List<T> list = new List<T>();
             using (var cmd = new SqlCommand(commandText, _cn))
             {
+                cmd.CommandTimeout = _commandTimeOut;
+
                 using (var dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
@@ -256,6 +260,7 @@ namespace ErikEJ.SqlCeScripting
         {
             using (var cmd = new SqlCommand(commandText, _cn))
             {
+                cmd.CommandTimeout = _commandTimeOut;
                 return cmd.ExecuteReader();
             }
         }
@@ -269,6 +274,7 @@ namespace ErikEJ.SqlCeScripting
                 dt.Locale = System.Globalization.CultureInfo.InvariantCulture;
                 using (var cmd = new SqlCommand(commandText, _cn))
                 {
+                    cmd.CommandTimeout = _commandTimeOut;
                     using (var da = new SqlDataAdapter(cmd))
                     {
                         da.Fill(dt);
@@ -289,6 +295,7 @@ namespace ErikEJ.SqlCeScripting
             object val;
             using (var cmd = new SqlCommand(commandText, _cn))
             {
+                cmd.CommandTimeout = _commandTimeOut;
                 val = cmd.ExecuteScalar();
             }
             return val;
@@ -298,6 +305,7 @@ namespace ErikEJ.SqlCeScripting
         {
             using (var cmd = new SqlCommand(commandText, _cn))
             {
+                cmd.CommandTimeout = _commandTimeOut;
                 cmd.ExecuteNonQuery();
             }
         }
@@ -558,6 +566,7 @@ namespace ErikEJ.SqlCeScripting
                 {
                     using (SqlCommand cmd = new SqlCommand())
                     {
+                        cmd.CommandTimeout = _commandTimeOut;
                         cmd.Connection = _cn;
                         foreach (var table in tables)
                         {
@@ -565,6 +574,7 @@ namespace ErikEJ.SqlCeScripting
 
                             using (SqlCommand command = new SqlCommand(strSql, _cn))
                             {
+                                command.CommandTimeout = _commandTimeOut;
                                 using (SqlDataAdapter adapter1 = new SqlDataAdapter(command))
                                 {
                                     adapter1.FillSchema(schemaSet, SchemaType.Source, table);
@@ -656,6 +666,7 @@ namespace ErikEJ.SqlCeScripting
             {
                 using (var cmd = new SqlCommand())
                 {
+                    cmd.CommandTimeout = _commandTimeOut;
                     cmd.Connection = _cn;
                     cmd.CommandText = sql;
                     cmd.ExecuteNonQuery();

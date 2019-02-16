@@ -10,10 +10,11 @@ namespace ErikEJ.SQLiteScripting
     {
         #region ISqlCeHelper Members
 
-        public void SaveDataConnection(string repositoryConnectionString, string connectionString, string filePath, int dbType)
+        public void SaveDataConnection(string repositoryConnectionString, string connectionString, string filePath, int dbType, int commandTimeOut = 30)
         {
             using (var cmd = new SQLiteCommand(repositoryConnectionString))
             {
+                cmd.CommandTimeout = commandTimeOut;
                 var conn = new SQLiteConnection(repositoryConnectionString);
                 cmd.Connection = conn;
                 cmd.CommandText = "INSERT INTO Databases (Source, FileName, CeVersion) VALUES (@Source, @FileName, @CeVersion)";
@@ -29,10 +30,11 @@ namespace ErikEJ.SQLiteScripting
             }
         }
 
-        public void UpdateDataConnection(string repositoryConnectionString, string connectionString, string description)
+        public void UpdateDataConnection(string repositoryConnectionString, string connectionString, string description, int commandTimeOut = 30)
         {
             using (var cmd = new SQLiteCommand(repositoryConnectionString))
             {
+                cmd.CommandTimeout = commandTimeOut;
                 var conn = new SQLiteConnection(repositoryConnectionString);
                 cmd.Connection = conn;
                 cmd.CommandText = "UPDATE Databases SET FileName = @FileName WHERE Source = @Source";
@@ -46,10 +48,11 @@ namespace ErikEJ.SQLiteScripting
             }            
         }
 
-        public void DeleteDataConnnection(string repositoryConnectionString, string connectionString)
+        public void DeleteDataConnnection(string repositoryConnectionString, string connectionString, int commandTimeOut = 30)
         {
             using (var cmd = new SQLiteCommand())
             {
+                cmd.CommandTimeout = commandTimeOut;
                 var conn = new SQLiteConnection(repositoryConnectionString);
                 cmd.Connection = conn;
                 cmd.CommandText = "DELETE FROM Databases WHERE Source = @Source;";
@@ -100,12 +103,13 @@ namespace ErikEJ.SQLiteScripting
             return sb.DataSource;
         }
 
-        public void CompactDatabase(string connectionString)
+        public void CompactDatabase(string connectionString, int commandTimeOut = 30)
         {
             using (var cmd = new SQLiteCommand())
             {
                 using (var conn = new SQLiteConnection(connectionString))
                 {
+                    cmd.CommandTimeout = commandTimeOut;
                     cmd.Connection = conn;
                     cmd.CommandText = "VACUUM;";
                     conn.Open();
@@ -114,12 +118,13 @@ namespace ErikEJ.SQLiteScripting
             }
         }
 
-        public void ShrinkDatabase(string connectionString)
+        public void ShrinkDatabase(string connectionString, int commandTimeOut = 30)
         {
             using (var cmd = new SQLiteCommand())
             {
                 using (var conn = new SQLiteConnection(connectionString))
                 {
+                    cmd.CommandTimeout = commandTimeOut;
                     cmd.Connection = conn;
                     cmd.CommandText = "REINDEX;";
                     conn.Open();

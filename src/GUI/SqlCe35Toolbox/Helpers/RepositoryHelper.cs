@@ -15,11 +15,11 @@ namespace ErikEJ.SqlCeToolbox.Helpers
             switch (databaseInfo.DatabaseType)
             {
                 case DatabaseType.SQLCE35:
-                    return new DBRepository(databaseInfo.ConnectionString);
+                    return new DBRepository(databaseInfo.ConnectionString, Properties.Settings.Default.CommandTimeOut);
                 case DatabaseType.SQLCE40:
                     return new DB4Repository(databaseInfo.ConnectionString);
                 case DatabaseType.SQLServer:
-                    return new ServerDBRepository(databaseInfo.ConnectionString, Properties.Settings.Default.KeepSchemaNames);
+                    return new ServerDBRepository(databaseInfo.ConnectionString, Properties.Settings.Default.KeepSchemaNames, Properties.Settings.Default.CommandTimeOut);
                 case DatabaseType.SQLite:
                     return new SQLiteRepository(databaseInfo.ConnectionString);
                 default:

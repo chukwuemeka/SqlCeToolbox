@@ -23,23 +23,27 @@ namespace ErikEJ.SqlCeScripting
         private delegate void AddToListDelegate<T>(ref List<T> list, SqlCeDataReader dr);
         private string _showPlan = string.Empty;
         private bool _schemaHasChanged;
+        
 
 #if V40
         /// <summary>
         /// Initializes a new instance of the <see cref="DB4Repository"/> class.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
-        public DB4Repository(string connectionString)
+        public DB4Repository(string connectionString, int commandTimeOut = 30)
 #else
         /// <summary>
         /// Initializes a new instance of the <see cref="DBRepository"/> class.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
-        public DBRepository(string connectionString)
+        /// <param name="commandTimeOut">The time to wait for query results before giving up to indicate that something has gone wrong.</param>
+        public DBRepository(string connectionString, int commandTimeOut = 30)
 #endif
         {
             _cn = new SqlCeConnection(connectionString);
             _cn.Open();
+            //SQL CE command time out can't be non-zero... Who knew?
+            //_commandTimeOut = commandTimeOut;
         }
 
         /// <summary>
@@ -138,6 +142,8 @@ namespace ErikEJ.SqlCeScripting
             List<T> list = new List<T>();
             using (var cmd = new SqlCeCommand(commandText, _cn))
             {
+                //SQL CE command time out can't be non-zero... Who knew?
+                //cmd.CommandTimeout = _commandTimeOut;
                 using (var dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
@@ -151,6 +157,8 @@ namespace ErikEJ.SqlCeScripting
         {
             using (var cmd = new SqlCeCommand(commandText, _cn))
             {
+                //SQL CE command time out can't be non-zero... Who knew?
+                //cmd.CommandTimeout = _commandTimeOut;
                 cmd.CommandType = commandType;
                 return cmd.ExecuteReader();
             }
@@ -165,6 +173,8 @@ namespace ErikEJ.SqlCeScripting
                 dt.Locale = CultureInfo.InvariantCulture;
                 using (var cmd = new SqlCeCommand(commandText, _cn))
                 {
+                    //SQL CE command time out can't be non-zero... Who knew?
+                    //cmd.CommandTimeout = _commandTimeOut;
                     using (var da = new SqlCeDataAdapter(cmd))
                     {
                         da.Fill(dt);
@@ -185,6 +195,8 @@ namespace ErikEJ.SqlCeScripting
             object val;
             using (var cmd = new SqlCeCommand(commandText, _cn))
             {
+                //SQL CE command time out can't be non-zero... Who knew?
+                //cmd.CommandTimeout = _commandTimeOut;
                 val = cmd.ExecuteScalar();
             }
             return val;
@@ -194,6 +206,8 @@ namespace ErikEJ.SqlCeScripting
         {
             using (var cmd = new SqlCeCommand(commandText, _cn))
             {
+                //SQL CE command time out can't be non-zero... Who knew?
+                //cmd.CommandTimeout = _commandTimeOut;
                 cmd.ExecuteNonQuery();
             }
         }
